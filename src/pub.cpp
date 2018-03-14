@@ -5,30 +5,57 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Char.h>
 #include <std_msgs/Int32MultiArray.h>
+#include <sensor_msgs/BatteryState.h>
 
 int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "image_publisher");
 	ros::NodeHandle nh;
 	image_transport::ImageTransport it(nh);
-	image_transport::Publisher pub = it.advertise("camera/image", 1);
+	image_transport::Publisher pub = it.advertise("becker", 1);
 	cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	//cv::waitKey(30);
 	sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image).toImageMsg();
 
 
 	ros::Publisher pub_first = nh.advertise<std_msgs::String>("/comece_aqui", 1000);
+	ros::Publisher pub_daniel = nh.advertise<std_msgs::Char>("/daniel", 1000);
+	ros::Publisher pub_glauco = nh.advertise<std_msgs::Int32MultiArray>("/glauco", 1000);
+	ros::Publisher pub_adriano = nh.advertise<sensor_msgs::BatteryState>("/adriano", 1000);
 
 	std_msgs::String pub1_msg;
-	pub1_msg.data = "Next topic is /becker";
+	pub1_msg.data = "Next topic is /daniel. You need to convert every number usin ASCII. The hidden phrase is between # characters and has less than 500 characters";
 	
-  ros::Rate loop_rate(5);
+	std_msgs::Char daniel_msg;
+	char buf[] = "#Next topic is /glauco. You need to divide the obtained numbers by the first integer greater than /glauco's publishing rate.#";
+	
+	std_msgs::Int32MultiArray glauco_msg;
+	char buf2[] = "Next topic is /adriano. Check the different fields of the message.";
+	for(int j = 0; j < sizeof(buf2)/sizeof(char); j++)
+	{
+		glauco_msg.data.push_back(buf2[j]*100);
+	}
+	
+	sensor_msgs::BatteryState adriano_msg;
+	adriano_msg.location = "The next topic is /becker";
+	adriano_msg.serial_number = "rosrun image_view image_view image:=<insert your topic here>";
+	
+	
+	//becker
+  ros::Rate loop_rate(100);
+  int i = 0;
   while (nh.ok()) 
   {
   	pub_first.publish(pub1_msg);
   	
+  	daniel_msg.data = buf[i];
+  	i++;
+  	if(i > sizeof(buf)/sizeof(char)) i = 0;
+  	pub_daniel.publish(daniel_msg);
+  	
+  	pub_glauco.publish(glauco_msg);
   
-  
+  	pub_adriano.publish(adriano_msg);
   
     pub.publish(msg);
     ros::spinOnce();
