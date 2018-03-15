@@ -18,16 +18,16 @@ int main(int argc, char** argv)
 	sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image).toImageMsg();
 
 
-	ros::Publisher pub_first = nh.advertise<std_msgs::String>("/comece_aqui", 1000);
+	ros::Publisher pub_first = nh.advertise<std_msgs::String>("/start_here", 1000);
 	ros::Publisher pub_daniel = nh.advertise<std_msgs::Char>("/daniel", 1000);
 	ros::Publisher pub_glauco = nh.advertise<std_msgs::Int32MultiArray>("/glauco", 1000);
 	ros::Publisher pub_adriano = nh.advertise<sensor_msgs::BatteryState>("/adriano", 1000);
 
 	std_msgs::String pub1_msg;
-	pub1_msg.data = "Next topic is /daniel. You need to convert every number usin ASCII. The hidden phrase is between # characters and has less than 500 characters";
+	pub1_msg.data = "Next topic is /daniel. You need to convert every number using ASCII. The hidden phrase is between # characters and has less than 500 characters";
 	
 	std_msgs::Char daniel_msg;
-	char buf[] = "#Next topic is /glauco. You need to divide the obtained numbers by the first integer greater than /glauco's publishing rate.#";
+	char buf[] = "#Next topic is /glauco. You need to divide the obtained numbers by the closest integer to /glauco's publishing rate.#";
 	
 	std_msgs::Int32MultiArray glauco_msg;
 	char buf2[] = "Next topic is /adriano. Check the different fields of the message.";
