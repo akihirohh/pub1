@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <image_transport/image_transport.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
@@ -13,8 +14,9 @@ int main(int argc, char** argv)
 	ros::NodeHandle nh;
 	image_transport::ImageTransport it(nh);
 	image_transport::Publisher pub = it.advertise("becker", 1);
-	cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-	//cv::waitKey(30);
+	std::string fig_path = ros::package::getPath("pub1") + "/include/.becker.png";
+	cv::Mat image = cv::imread(fig_path, CV_LOAD_IMAGE_COLOR);
+	//cv::Mat image = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image).toImageMsg();
 
 
@@ -24,22 +26,22 @@ int main(int argc, char** argv)
 	ros::Publisher pub_adriano = nh.advertise<sensor_msgs::BatteryState>("/adriano", 1000);
 
 	std_msgs::String pub1_msg;
-	pub1_msg.data = "Next topic is /daniel. You need to convert every number using ASCII. The hidden phrase is between # characters and has less than 500 characters";
+	pub1_msg.data = "Next topic is /adriano. Check the different fields of the message. The hidden phrase is between # characters and has less than 500 characters.";
 	
 	std_msgs::Char daniel_msg;
 	char buf[] = "#Next topic is /glauco. You need to divide the obtained numbers by the closest integer to /glauco's publishing rate.#";
 	
 	std_msgs::Int32MultiArray glauco_msg;
-	char buf2[] = "Next topic is /adriano. Check the different fields of the message.";
+	char buf2[] = "The next topic is /becker. Run rosrun image_view image_view image:=<insert your topic here>";
+	;
 	for(int j = 0; j < sizeof(buf2)/sizeof(char); j++)
 	{
 		glauco_msg.data.push_back(buf2[j]*100);
 	}
 	
 	sensor_msgs::BatteryState adriano_msg;
-	adriano_msg.location = "The next topic is /becker";
-	adriano_msg.serial_number = "rosrun image_view image_view image:=<insert your topic here>";
-	
+	adriano_msg.location = "Next topic is /daniel.";
+	adriano_msg.serial_number = "You need to convert every number using ASCII.";
 	
 	//becker
   ros::Rate loop_rate(100);
